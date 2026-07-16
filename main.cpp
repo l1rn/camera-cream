@@ -1,49 +1,12 @@
-#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <vector>
 #include <string>
-#include <thread>
 #include <unistd.h>
 
 #define PORT 8001
 
-cv::Mat global_frame;
-std::mutex frame_mutex;
-bool camera_running = true;
-
-void camera_producer(){
-    cv::VideoCapture cap(0, cv::CAP_V4L2);
-
-    if(!cap.isOpened()){
-        std::cerr << "Error: unable to open webcam interface." << std::endl;
-        camera_running = false;
-        return;
-    }
-
-    cap.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
-    cap.set(cv::CAP_PROP_FPS, 30);
-    
-    cv::Mat temp_frame;
-    while(camera_running){
-        cap >> temp_frame;
-        if(temp_frame.empty()){
-            std::cerr << "Warning: Captured empty frame, retrying..." << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            continue;
-        }
-        {
-            std::lock_guard<std::mutex> lock(frame_mutex);
-            temp_frame.copyTo(global_frame);
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
-    }
-    cap.release();
-
-}
 void handle_client(int client_socket){
     char request_buffer[1024] = {0};
     ssize_t bytes_received = recv(client_socket, request_buffer, sizeof(request_buffer)- 1, 0);
@@ -59,7 +22,7 @@ void handle_client(int client_socket){
         close(client_socket);
         return;
     }
-    
+
     std::vector<uchar> buffer;
     std::vector<int> params = {cv::IMWRITE_JPEG_QUALITY, 80};
     cv::Mat local_frame;
