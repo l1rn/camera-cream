@@ -78,10 +78,16 @@ void V4L2Camera::uninitDevice(){
 
 bool V4L2Camera::start(){
     if(!initDevice()) return false;
+    {
+        std::lock_guard<std::mutex> lock(m_frameMutex);
+        m_latestJpeg.clear();
+    }
+
     enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
     if(ioctl(m_fd, VIDIOC_STREAMON, &type) < 0){
-        std::cerr << "Failed to start streaming." << std::endl;
+        std::cerr << "Failed to start streaming (VIDIOC_STREAMON)." << std::endl;
+        uninitDevice();
         return false;
     }
 
@@ -122,13 +128,17 @@ void V4L2Camera::captureLoop(){
         FD_SET(m_fd, &fds);
         struct timeval tv{};
 
-        tv.tv_sec = 2;
+        tv.tv_sec = 1;
+        tv.tv_usec = 0;
         int r = select(m_fd + 1, &fds, NULL, NULL, &tv);
         
         if (r == 0) {
-            std::cerr << "[V4L2Camera] Warning: select() timed out! Hardware is not sending frames." << std::endl;
+            std::cerr << "[V4L2Camera] Warning: select() timed out! Pinging hardware..." << std::endl;
+            struct v4l2_audio audio{};
+            ioctl(m_fd, VIDIOC_G_AUDIO, &audio);
             continue;
         } else if (r < 0) {
+            if (errno == EINTR) continue;
             std::cerr << "[V4L2Camera] Error: select() encountered a system error." << std::endl;
             continue;
         }
@@ -142,7 +152,7 @@ void V4L2Camera::captureLoop(){
             continue;
         }
 
-        {
+        if (buf.bytesused > 0) {
             std::lock_guard<std::mutex> lock(m_frameMutex);
             uint8_t* rawData = static_cast<uint8_t*>(m_buffers[buf.index].start);
             m_latestJpeg.assign(rawData, rawData + buf.bytesused); 

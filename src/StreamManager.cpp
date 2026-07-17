@@ -13,7 +13,7 @@ StreamManager::~StreamManager(){
     stopAll();
 }
 
-bool StreamManager::createStream(int deviceIndex, const std::string &addr, int port){
+bool StreamManager::createStream(const std::string& devicePath, const std::string &addr, int port){
     std::lock_guard<std::mutex> lock(m_managerMutex);
     if(m_servers.find(port) != m_servers.end()){
         std::cerr << TOPIC << " Error: Port " << port << " is already running an active stream" << std::endl;
@@ -21,30 +21,28 @@ bool StreamManager::createStream(int deviceIndex, const std::string &addr, int p
     }
 
     std::shared_ptr<CameraDevice> camera;
-    auto camIt = m_cameras.find(deviceIndex);
 
-    if(camIt != m_cameras.end()){
-        camera = camIt->second;
-        std::cout << TOPIC << " Reusing active camera hardware backend for index: " << deviceIndex << std::endl;
+    if(m_cameras.find(devicePath) != m_cameras.end()){
+        camera = m_cameras[devicePath];
+        std::cout << TOPIC << " Reusing active camera hardware backend for index: " << devicePath << std::endl;
     } else {
 #ifdef _WIN32
         return false;
 #else
-        std::string devPath = "/dev/video" + std::to_string(deviceIndex);
-        camera = std::make_shared<V4L2Camera>(devPath);
+        camera = std::make_shared<V4L2Camera>(devicePath);
 #endif
         if(!camera->start()){
-            std::cerr << TOPIC << " Failed to start camera driver for device: " << deviceIndex << std::endl;
+            std::cerr << TOPIC << " Failed to start camera driver for device: " << devicePath << std::endl;
             return false;
         }
     }
-    m_cameras[deviceIndex] = camera;
+    m_cameras[devicePath] = camera;
     auto server = std::make_unique<StreamServer>(camera, addr, port);
     if(!server->start()){
         std::cerr << TOPIC << " Failed to bind network socket server on port: " << port << std::endl;
         if(camera.use_count() <= 2){
             camera->stop();
-            m_cameras.erase(deviceIndex);
+            m_cameras.erase(devicePath);
         }
         return false;
     }
