@@ -1,34 +1,16 @@
 #ifndef CAMERA_DEVICE_HPP
 #define CAMERA_DEVICE_HPP
 
-#include <opencv2/opencv.hpp>
-#include <thread>
-#include <mutex>
-#include <atomic>
+#include <vector>
+#include <cstdint>
 
-class CameraDevice{
+class CameraDevice {
 public:
-    CameraDevice(int dI, int w = 640, int h = 480, int fps = 30);
-    ~CameraDevice();
-
-    bool start();
-    void stop();
-    bool isRunning() const;
-    int getDeviceIndex() const;
-    cv::Mat getLatestFrame();
-
-private:
-    void captureLoop();
-
-    int m_deviceIndex;
-    int m_width;
-    int m_height;
-    int m_fps;
-
-    std::atomic<bool> m_running{false};
-    std::thread m_thread;
-    std::mutex m_frameMutex;
-    cv::Mat m_latestFrame;
+    virtual ~CameraDevice() = default;
+    virtual bool start() = 0;
+    virtual void stop() = 0;
+    virtual bool isRunning() const = 0;
+    virtual std::vector<uint8_t> getLatestJPEG() = 0;
 };
 
 #endif // CAMERA_DEVICE_HPP

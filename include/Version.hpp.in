@@ -1,0 +1,18 @@
+#ifndef VERSION_HPP
+#define VERSION_HPP
+
+#include <string_view>
+
+namespace Version {
+    constexpr std::string_view FULL_STRING = "@GIT_VERSION_STRING@";
+    
+    constexpr int MAJOR = @VERSION_MAJOR@;
+    constexpr int MINOR = @VERSION_MINOR@;
+    constexpr int PATCH = @VERSION_PATCH@;
+    
+    constexpr int COMMIT_COUNT = @VERSION_COMMIT_COUNT@; 
+    
+    constexpr std::string_view GIT_HASH = "@VERSION_HASH@";
+}
+
+#endif 

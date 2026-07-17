@@ -4,6 +4,8 @@
 #include <string>
 #include "CameraDevice.hpp"
 #include <memory>
+#include <atomic>
+#include <thread>
 
 class StreamServer {
 public:

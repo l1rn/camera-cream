@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named opencv_app
+# Target rules for targets named camera-cream
 
 # Build rule for target.
-opencv_app: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 opencv_app
-.PHONY : opencv_app
+camera-cream: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 camera-cream
+.PHONY : camera-cream
 
 # fast build rule for target.
-opencv_app/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/opencv_app.dir/build.make CMakeFiles/opencv_app.dir/build
-.PHONY : opencv_app/fast
+camera-cream/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/build
+.PHONY : camera-cream/fast
 
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/opencv_app.dir/build.make CMakeFiles/opencv_app.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -142,7 +142,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/opencv_app.dir/build.make CMakeFiles/opencv_app.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -150,8 +150,80 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/opencv_app.dir/build.make CMakeFiles/opencv_app.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+src/StreamManager.o: src/StreamManager.cpp.o
+.PHONY : src/StreamManager.o
+
+# target to build an object file
+src/StreamManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/StreamManager.cpp.o
+.PHONY : src/StreamManager.cpp.o
+
+src/StreamManager.i: src/StreamManager.cpp.i
+.PHONY : src/StreamManager.i
+
+# target to preprocess a source file
+src/StreamManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/StreamManager.cpp.i
+.PHONY : src/StreamManager.cpp.i
+
+src/StreamManager.s: src/StreamManager.cpp.s
+.PHONY : src/StreamManager.s
+
+# target to generate assembly for a file
+src/StreamManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/StreamManager.cpp.s
+.PHONY : src/StreamManager.cpp.s
+
+src/StreamServer.o: src/StreamServer.cpp.o
+.PHONY : src/StreamServer.o
+
+# target to build an object file
+src/StreamServer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/StreamServer.cpp.o
+.PHONY : src/StreamServer.cpp.o
+
+src/StreamServer.i: src/StreamServer.cpp.i
+.PHONY : src/StreamServer.i
+
+# target to preprocess a source file
+src/StreamServer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/StreamServer.cpp.i
+.PHONY : src/StreamServer.cpp.i
+
+src/StreamServer.s: src/StreamServer.cpp.s
+.PHONY : src/StreamServer.s
+
+# target to generate assembly for a file
+src/StreamServer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/StreamServer.cpp.s
+.PHONY : src/StreamServer.cpp.s
+
+src/V4L2Camera.o: src/V4L2Camera.cpp.o
+.PHONY : src/V4L2Camera.o
+
+# target to build an object file
+src/V4L2Camera.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/V4L2Camera.cpp.o
+.PHONY : src/V4L2Camera.cpp.o
+
+src/V4L2Camera.i: src/V4L2Camera.cpp.i
+.PHONY : src/V4L2Camera.i
+
+# target to preprocess a source file
+src/V4L2Camera.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/V4L2Camera.cpp.i
+.PHONY : src/V4L2Camera.cpp.i
+
+src/V4L2Camera.s: src/V4L2Camera.cpp.s
+.PHONY : src/V4L2Camera.s
+
+# target to generate assembly for a file
+src/V4L2Camera.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/camera-cream.dir/build.make CMakeFiles/camera-cream.dir/src/V4L2Camera.cpp.s
+.PHONY : src/V4L2Camera.cpp.s
 
 # Help Target
 help:
@@ -161,10 +233,19 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... opencv_app"
+	@echo "... camera-cream"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/StreamManager.o"
+	@echo "... src/StreamManager.i"
+	@echo "... src/StreamManager.s"
+	@echo "... src/StreamServer.o"
+	@echo "... src/StreamServer.i"
+	@echo "... src/StreamServer.s"
+	@echo "... src/V4L2Camera.o"
+	@echo "... src/V4L2Camera.i"
+	@echo "... src/V4L2Camera.s"
 .PHONY : help
 
 
